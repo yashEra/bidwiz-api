@@ -41,3 +41,25 @@ def userlogin(request, *args, **kwargs):
         return Response({"data": serializer.data})
     else:
         return Response({'data': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+def userlogin(request, *args, **kwargs):
+    print(request.data)
+    d = User.objects.all().values()
+    return Response({"data": d})
+    serializer = UserSerializer(data=request.data)
+    if serializer.is_valid():
+        serializer.save()
+        d = User.objects.all().values()
+        return Response({"data": serializer.data})
+        # return Response({"data": serializer.data})
+    else:
+        return Response({'data': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+    # serializer = UserSerializer(data=request.data)
+    # if serializer.is_valid():
+    #     serializer.save()
+    #     d = User.objects.all().values()
+        # return Response({"data": serializer.data})
+    # else:
+    #     return Response({'data': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
