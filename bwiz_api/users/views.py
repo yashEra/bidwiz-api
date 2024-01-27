@@ -56,10 +56,29 @@ def userlogin(request, *args, **kwargs):
         # return Response({"data": serializer.data})
     else:
         return Response({'data': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
-    # serializer = UserSerializer(data=request.data)
-    # if serializer.is_valid():
-    #     serializer.save()
-    #     d = User.objects.all().values()
-        # return Response({"data": serializer.data})
-    # else:
-    #     return Response({'data': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['POST'])
+def signup(request, *args, **kwargs):
+    print(request.data)
+
+    # Validate user input using UserSerializer
+    serializer = UserSerializer(data=request.data)
+
+    if serializer.is_valid():
+        # Check for unique username or email, you may customize this based on your model
+
+        # email = serializer.validated_data.get('email')
+        #
+        # if User.objects.filter(email=email).exists():
+        #     return Response({'error': 'email already exists'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Save the user if validation passes
+        serializer.save()
+
+        # Return a success response
+        return Response({"data": serializer.data})
+    else:
+        # Return validation errors
+        return Response({'data': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+        # return Response({'error': 'email already exists'}, status=status.HTTP_400_BAD_REQUEST)
