@@ -1,10 +1,14 @@
 from rest_framework import serializers
-from .models import Standard, User
+from .models import Standard, User,Items
 from django.contrib.auth import authenticate
 
 class StandardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Standard
+        fields = '__all__'
+class ItemSerializer(serializers.ModelSerializer):
+    class Meta: 
+        model = Items
         fields = '__all__'
  
 

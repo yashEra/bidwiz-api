@@ -4,9 +4,9 @@ from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.generics import CreateAPIView, UpdateAPIView,RetrieveAPIView,DestroyAPIView,ListAPIView
 from rest_framework.permissions import AllowAny,IsAuthenticated
-from .serializers import StandardSerializer, UserSerializer,CreateUserSerializer,UpdateUserSerializer,LoginSerializer
+from .serializers import StandardSerializer, UserSerializer,CreateUserSerializer,UpdateUserSerializer,LoginSerializer,ItemSerializer
 from rest_framework.response import Response
-from .models import Standard, User
+from .models import Standard, User,Items
 from knox import views as knox_views
 from django.contrib.auth import login
 
@@ -111,4 +111,8 @@ class LoginAPIView(knox_views.LoginView):
         else:
             return Response({'errors':serializer.errors},status = status.HTTP_400_BAD_REQUEST)
         return Response(response.data,status = status.HTTP_200_OK)
-    
+
+class ItemsAPIView(CreateAPIView,UpdateAPIView,RetrieveAPIView,DestroyAPIView):
+    permission_classes = (AllowAny,)
+    serializer_class = ItemSerializer
+    queryset = Items.objects.all()
