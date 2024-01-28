@@ -4,10 +4,6 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-pillow = "*"
-django-cors-headers = "*"
-pymysql = "*"
-django = "*"
 
 [dev-packages]
 
