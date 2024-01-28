@@ -69,3 +69,20 @@ class User(AbstractBaseUser):
 
     def has_perm(self, perm, obj=None):
         return True
+
+class Items(models.Model):
+    item_id = models.CharField(max_length = 50 , primary_key = True)
+    item_name = models.CharField(max_length = 256)
+    category = models.CharField(max_length = 256)
+    start_bid_price = models.CharField(max_length = 10)
+    current_max_bid = models.CharField(max_length = 10)
+    end_date = models.CharField(max_length = 10)
+    description = models.DateField(max_length = 1024)
+    reviews = models.PositiveSmallIntegerField(default = 0)
+    reviews_score = models.PositiveSmallIntegerField(default = 0)
+    cover_image = models.ImageField(upload_to=upload_to , default="items/default.png")
+    imageone = models.ImageField(upload_to=upload_to , default="items/default.png")
+    imagetwo = models.ImageField(upload_to=upload_to , default="items/default.png")
+    imagethree = models.ImageField(upload_to=upload_to , default="items/default.png")
+
+    REQUIRED_FIELDS = [item_name , item_name , start_bid_price , category , end_date , cover_image , description]
