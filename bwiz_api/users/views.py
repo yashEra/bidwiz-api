@@ -1,6 +1,10 @@
+from django.http import JsonResponse
+from django.middleware.csrf import get_token
 from django.shortcuts import render
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
+from django.views.decorators.http import require_POST
 from rest_framework import status
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.mixins import CreateModelMixin, RetrieveModelMixin, DestroyModelMixin, UpdateModelMixin
 from rest_framework.views import APIView
 from rest_framework.generics import CreateAPIView, UpdateAPIView, RetrieveAPIView, DestroyAPIView, ListAPIView
@@ -146,7 +150,56 @@ class FasionsItemsAPIView(ListAPIView):
     queryset = Items.objects.filter(category='Fashion')
 
 
-class ItemDetailView(RetrieveAPIView):
-    queryset = Items.objects.all()
-    serializer_class = ItemSerializer
-    # lookup_field = 'item_id'
+class ItemDetailView(APIView):
+    def get(self, request, item_id):
+        try:
+            item = Items.objects.get(item_id=item_id)
+        except Items.DoesNotExist:
+            return Response({"details": "Item not found"}, status=status.HTTP_404_NOT_FOUND)
+
+        serializer = ItemSerializer(item)  # Replace with your actual serializer
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# Add this decorator to allow cross-origin requests for development purposes
+# def handle_bid_submission(request, item_id):
+# @csrf_protect
+@csrf_exempt
+@api_view(['POST'])
+def handle_bid_submission(request, item_id):
+    try:
+        # Retrieve the bid amount from the request's POST data
+        # bid_amount_str = request.data.get('current_max_bid')
+
+        # Check if the bid amount is not empty
+        if item_id is not None and item_id.strip():
+            bid_amount = float(item_id)
+
+            # Assuming you have a model named 'Item' with a field 'current_bid_price'
+            item = Items.objects.get(item_id=item_id)
+            # Update the current_bid_price field
+            # item.current_max_bid = bid_amount
+            # item.save()
+            serializer = ItemSerializer(
+                item,
+                data=request.data,
+                partial=True
+            )
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            # You can also perform additional logic here if needed
+
+            # Respond with a success message
+            return JsonResponse({'message': 'Bid updated successfully'})
+        else:
+            # If bid amount is empty or None, respond with an error message
+            return JsonResponse({'error': 'Bid amount is missing or invalid'}, status=400)
+
+    except Exception as e:
+        # Handle any errors that might occur
+        return JsonResponse({'error': str(e)}, status=500)
+
+
+def get_csrf_token(request):
+    csrf_token = get_token(request)
+    return JsonResponse({'csrfToken': csrf_token})

@@ -71,6 +71,8 @@ class User(AbstractBaseUser):
 
 
 class Items(models.Model):
+    DoesNotExist = None
+    objects = None
     item_id = models.CharField(max_length=50, primary_key=True)
     item_name = models.CharField(max_length=256)
     category = models.CharField(max_length=256)
@@ -86,3 +88,9 @@ class Items(models.Model):
     imagethree = models.ImageField(upload_to=upload_to, default="three-default.png")
 
     REQUIRED_FIELDS = [item_name, item_name, start_bid_price, category, end_date, cover_image, description]
+
+    def update_max_bid(self, new_bid):
+        # Assuming current_max_bid is a numeric field
+        if new_bid > float(self.current_max_bid):
+            self.current_max_bid = str(new_bid)
+            self.save()
