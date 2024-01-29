@@ -144,3 +144,9 @@ class FasionsItemsAPIView(ListAPIView):
     permission_classes = (AllowAny,)
     serializer_class = ItemSerializer
     queryset = Items.objects.filter(category='Fashion')
+
+
+class ItemDetailView(RetrieveAPIView):
+    queryset = Items.objects.all()
+    serializer_class = ItemSerializer
+    # lookup_field = 'item_id'

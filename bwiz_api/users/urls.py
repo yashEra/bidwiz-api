@@ -4,7 +4,7 @@ from rest_framework.generics import RetrieveAPIView
 from . import views
 from knox.views import LogoutView,LogoutAllView
 
-from .views import ItemsAPIView, ElectronicsItemsAPIView, ArtsItemsAPIView, FasionsItemsAPIView
+from .views import ItemsAPIView, ElectronicsItemsAPIView, ArtsItemsAPIView, FasionsItemsAPIView, ItemDetailView
 
 urlpatterns = [
     # path('create-standard/', views.post),
@@ -18,6 +18,7 @@ urlpatterns = [
     path('electronics/', ElectronicsItemsAPIView.as_view(), name='electronics-items-list'),
     path('arts/', ArtsItemsAPIView.as_view(), name='arts-items-list'),
     path('fasions/', FasionsItemsAPIView.as_view(), name='fasions-items-list'),
+    path('items/<int:pk>/', ItemDetailView.as_view(), name='item-detail'),
 
 ]
 #crate urls
