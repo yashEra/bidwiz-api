@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import AbstractBaseUser,BaseUserManager
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.db import models
 
 
@@ -42,22 +42,21 @@ class UserManager(BaseUserManager):
 
 # user model : its override the djangp abstract user
 class User(AbstractBaseUser):
-    name = models.CharField(max_length=256, null = True)
-    email = models.EmailField(max_length=200, primary_key=True,unique = True)
+    name = models.CharField(max_length=256, null=True)
+    email = models.EmailField(max_length=200, primary_key=True, unique=True)
     password = models.CharField(max_length=1024)
-    
+
     birth_date = models.CharField(max_length=30, null=True)
     avatar = models.ImageField(upload_to=upload_to, default="user/default_user.svg")
-    username = models.CharField(max_length=256)
+    username = models.CharField(max_length=256, null=True)
     first_name = models.CharField(max_length=256, null=True)
     last_name = models.CharField(max_length=256, null=True)
-    
-    is_staff = models.BooleanField(default = False)
-    is_superuser = models.BooleanField(default = False)
-    is_active = models.BooleanField(default = True)
+
+    is_staff = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['username']
 
     objects = UserManager()
 
@@ -70,19 +69,20 @@ class User(AbstractBaseUser):
     def has_perm(self, perm, obj=None):
         return True
 
-class Items(models.Model):
-    item_id = models.CharField(max_length = 50 , primary_key = True)
-    item_name = models.CharField(max_length = 256)
-    category = models.CharField(max_length = 256)
-    start_bid_price = models.CharField(max_length = 10)
-    current_max_bid = models.CharField(max_length = 10)
-    end_date = models.CharField(max_length = 10)
-    description = models.DateField(max_length = 1024)
-    reviews = models.PositiveSmallIntegerField(default = 0)
-    reviews_score = models.PositiveSmallIntegerField(default = 0)
-    cover_image = models.ImageField(upload_to=upload_to , default="items/default.png")
-    imageone = models.ImageField(upload_to=upload_to , default="items/default.png")
-    imagetwo = models.ImageField(upload_to=upload_to , default="items/default.png")
-    imagethree = models.ImageField(upload_to=upload_to , default="items/default.png")
 
-    REQUIRED_FIELDS = [item_name , item_name , start_bid_price , category , end_date , cover_image , description]
+class Items(models.Model):
+    item_id = models.CharField(max_length=50, primary_key=True)
+    item_name = models.CharField(max_length=256)
+    category = models.CharField(max_length=256)
+    start_bid_price = models.CharField(max_length=10)
+    current_max_bid = models.CharField(max_length=10)
+    end_date = models.DateField(max_length=1024)
+    description = models.CharField(max_length=1000)
+    reviews = models.PositiveSmallIntegerField(default=0)
+    reviews_score = models.PositiveSmallIntegerField(default=0)
+    cover_image = models.CharField(default="items/cover-default.jpg", max_length=1000)
+    imageone = models.ImageField(upload_to=upload_to, default="one-default.png")
+    imagetwo = models.ImageField(upload_to=upload_to, default="two-default.png")
+    imagethree = models.ImageField(upload_to=upload_to, default="three-default.png")
+
+    REQUIRED_FIELDS = [item_name, item_name, start_bid_price, category, end_date, cover_image, description]
